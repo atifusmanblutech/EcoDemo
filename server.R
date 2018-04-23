@@ -517,7 +517,7 @@ shinyServer(function(input, output, session) {
   
   output$dayFilterControlForSMS <- renderUI({
     
-    selectInput("daysMarketingFilterSMS", "Please Select Day(s)  for SMS Marketing", multiple = FALSE ,
+    selectInput("daysMarketingFilterSMS", "Please Select Day(s)  for SMS Marketing", multiple = TRUE ,
                 choices = c('Mon' = 'Monday','Tue'= 'Tuesday', 'Wed' = 'Wednesday','Thu'='Thursday','Fri'='Friday','Sun'='Sunday'))
     
   })
@@ -565,14 +565,12 @@ shinyServer(function(input, output, session) {
     
     removeDuplicated <- subset(selectedDays, !duplicated(Email))
     
-    # totalDays <- unique(selectedDays$dayOfWeek)
-    
     top20cust <- head(removeDuplicated,5)
     
     inputFromuser <- input$textSmsMarketingWeekday
      
-    # for(row in 1:nrow(totalDays))
-    # {
+    for(row in 1:nrow(removeDuplicated))
+    {
 
       day=paste(removeDuplicated[row,"dayOfWeek"])
       
@@ -583,13 +581,13 @@ shinyServer(function(input, output, session) {
         num=paste(top20cust[row,"Number"])
         
         messageFull <- paste(message," ",row)
-        # POST(url,authenticate(AUTH_ID,AUTH_TOKEN),body=list(src=senderNumber,dst=num,text=message))
+        POST(url,authenticate(AUTH_ID,AUTH_TOKEN),body=list(src=senderNumber,dst=num,text=message))
         
-        showNotification(paste(day, " " ,row, " Manual SMS sent to: ",num), type = "message")  
+        showNotification(paste(row, " Manual SMS sent to: ",num), type = "message")  
         
       }      
       
-    
+    }
     
     
     
